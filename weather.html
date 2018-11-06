@@ -1,0 +1,64 @@
+<!--DOCTYPE HTML-->
+<html>
+<meta charset="utf-8"/>
+<head>
+  Weather
+</head>
+<style>
+textarea {
+  height: 200px;
+  width: 400px;
+}
+</style>
+<body>
+  <span>Enter ZIP code:</span>
+  <input id="input" type="number"  value=""/>
+  <button id="getWeather">Get Weather</button>
+  <button id="clear">Clear</button>
+</br>
+  <textarea id="textArea"></textarea>
+</body>
+<script>
+var button = document.getElementById("getWeather");
+var textArea = document.getElementById("textArea");
+var clear = document.getElementById("clear");
+var input = document.getElementById("input");
+var zipcodeDesired;
+var request;
+var result;
+var storeResult = [];
+
+button.addEventListener(("click"), () => {
+  loadDoc();
+});
+
+clear.addEventListener(("click"), () => {
+  textArea.innerHTML = "";
+  input.value = "";
+  storeResult = "";
+});
+
+function loadDoc() {
+  zipcodeDesired = document.getElementById("input");
+  console.log(zipcodeDesired.value);
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log(this.responseText);
+      var result = JSON.parse(this.responseText);
+      console.log(result.name);
+      storeResult += (result.name + " : " + result.main.temp + " degrees Fahrenheit" + "\n");
+      textArea.innerHTML = storeResult;
+    }
+  };
+  xhttp.open("GET", "http://api.openweathermap.org/data/2.5/weather?zip=" + zipcodeDesired.value + ",us&units=imperial&&APPID=36fac0ea9c8b4bef6fc7bac05be62eda", true);
+  xhttp.send();
+}
+
+function clear() {
+  console.log("cleared");
+  textArea.innerHTML = "";
+}
+
+</script>
+</html>
